@@ -10,8 +10,8 @@ public class Functionalities {
 	
 	public String moveDir(int o,String d,String a) {
 		char[] b = new char[a.length()];
-		int c=a.length();	
-		for (int i=0;i<c;i++) {
+		String c=d;	
+		for (int i=0;i<a.length();i++) {
 			if(i==0) {
 				d=d+'/';
 			}
@@ -20,8 +20,16 @@ public class Functionalities {
 				d=d+b[i];
 			}
 		}
+		File idk = new File(d);
 		path[o]=d;
-		return d;
+		if(idk.isDirectory()) {
+			return d;
+		}
+		else {
+			System.out.println("Directory doesn't exist");
+			return c;
+		}
+	
 	}
 	
 	public String moveDr(String d,String a,int o) {
@@ -46,10 +54,14 @@ public class Functionalities {
 			h=h+b[z];
 		}
 		File perro = new File(h);
-		OutputStream out = new FileOutputStream(perro);
-		out.write(c.getBytes());
-		out.close();
-
+		if(!perro.exists()) {
+			OutputStream out = new FileOutputStream(perro);
+			out.write(c.getBytes());
+			out.close();
+		}
+		else{
+			System.out.println("File already exists");
+		}
 	}
 			
 			
@@ -61,7 +73,6 @@ public class Functionalities {
 		for (int i=0;i<a.length();i++) {
 			try{
 				b[i]=a.charAt(i+1);
-				System.out.print(b[i]);
 				if(b[i]=='>') {
 					echoTxt(a,h,i,c);
 					break;
@@ -71,6 +82,7 @@ public class Functionalities {
 				break;
 			}
 		}
+		System.out.println(c);
 	}
 	
 	public void copy() {

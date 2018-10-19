@@ -21,11 +21,13 @@ public class Main extends Functionalities{
 			
 			File path = new File(camino);
 			command = sn.next();
+			
 			if(command.equals("echo")) {
 				fun.echoPrint(sn.nextLine(),camino);
 				System.out.println("");
 				System.out.print(camino+'>');
 			}
+			
 			if(command.equals("cd")) {
 			    String u=sn.nextLine();
 				try {
@@ -43,6 +45,7 @@ public class Main extends Functionalities{
 				}
 				System.out.print(camino+'>');
 			}
+			
 			if(command.equals("mkdir")) {
 				camino=fun.mkdir(camino,sn.nextLine(),i);
 				i++;
