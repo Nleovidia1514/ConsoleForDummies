@@ -6,7 +6,6 @@ import java.util.Scanner;
 
 public class Main extends Functionalities{
 	
-	private static int i=0;
 	static Functionalities fun = new Functionalities();
 	static String camino ="C:/Users/User/Mis documentos/JAVA/test";
 	Object p[];
@@ -14,44 +13,51 @@ public class Main extends Functionalities{
 	private static String command="";
 	static boolean keepRunning=true;
 	
-	public static void main(String[] args){
+	public static void main(String[] args) throws IOException{
 		Scanner sn = new Scanner(System.in);
-		System.out.print(camino+'>');
+		File hello = new File("");
+		camino=hello.getAbsolutePath();
 		while(keepRunning) {
-			
+			System.out.print(camino+'>');
 			File path = new File(camino);
 			command = sn.next();
 			
-			if(command.equals("echo")) {
+			if(command.equalsIgnoreCase("echo")) {
 				fun.echoPrint(sn.nextLine(),camino);
 				System.out.println("");
-				System.out.print(camino+'>');
+				
 			}
 			
-			if(command.equals("cd")) {
+			if(command.equalsIgnoreCase("cd")) {
 			    String u=sn.nextLine();
 				try {
-					if(u.equals(" ...")){
-						i--;
-						camino=fun.moveDr(camino, u, i);
-					}
+					if(u.equals(" ..")){
+						camino=path.getParent();					}
 					else {
-						i++;
-						camino=fun.moveDir(i,camino,u);
+						camino=fun.moveDir(camino,u);
 					}
 				}catch(Exception e) {
 					System.out.println("Directory doesn't exist");
-					i++;
 				}
-				System.out.print(camino+'>');
+				
 			}
 			
-			if(command.equals("mkdir")) {
-				camino=fun.mkdir(camino,sn.nextLine(),i);
-				i++;
-				System.out.print(camino+'>');
+			if(command.equalsIgnoreCase("mkdir")) {
+				camino=fun.mkdir(camino,sn.nextLine());	
 			}
 			
+			if(command.equalsIgnoreCase("dir")) {
+				fun.showDir(path);
+				
+			}
+			
+			if(command.equalsIgnoreCase("del")) {
+				fun.delete(camino, sn.nextLine());
+			}
+			
+			if(command.equalsIgnoreCase("move")) {
+				fun.move(sn.next(), camino, sn.next());
+			}
 		}
 		
 	

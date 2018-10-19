@@ -1,14 +1,19 @@
 package com.Console.labc;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.text.SimpleDateFormat;
+import java.util.Scanner;
 
 
 public class Functionalities {
-	char chars[];
-	String[] paths;
-	String[] path = new String[30];
+	private char chars[];
+	private String[] paths;
+	private String[] path = new String[30];
+	private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyy HH:mm:ss");
+	private Scanner sn = new Scanner(System.in);
 	
-	public String moveDir(int o,String d,String a) {
+	protected String moveDir(String d,String a) {
 		char[] b = new char[a.length()];
 		String c=d;	
 		for (int i=0;i<a.length();i++) {
@@ -21,9 +26,8 @@ public class Functionalities {
 			}
 		}
 		File idk = new File(d);
-		path[o]=d;
 		if(idk.isDirectory()) {
-			return d;
+			return idk.getAbsolutePath();
 		}
 		else {
 			System.out.println("Directory doesn't exist");
@@ -32,21 +36,35 @@ public class Functionalities {
 	
 	}
 	
-	public String moveDr(String d,String a,int o) {
-		if(o==0) {
-			d="C:/Users/User/Mis documentos/JAVA/test";
-		}
-		else {
-			d=path[o];
-		}
-		return d;
+	protected String moveDir(File a) {
+		return a.getParent();
 	}
 	
-	public void showDir() {
-		
-	}
+	protected void showDir(File a) throws IOException {
+		File[] content = a.listFiles();
+		int numberDir=0;
+		int numberFiles=0;
+		long freeSpace=a.getUsableSpace();
+		long TotalSpace=0;
 	
-	public void echoTxt(String a,String h,int i,String c) throws IOException {
+		for(File files : content ) {
+			if(files.isDirectory()) {
+				numberDir+=1;
+				System.out.format("%1$-25s %2$-10s %3$-5s %4$-10s\n",sdf.format(files.lastModified()),"<DIR>",files.length(),files.getName());
+			}
+			else {
+				numberFiles+=1;
+				System.out.format("%1$-25s %2$-10s %3$-5s %4$-10s\n",sdf.format(files.lastModified()),"<FILE>",files.length(),files.getName());
+			}
+			
+			freeSpace-=files.length();
+			TotalSpace+=files.length();
+		}
+		System.out.format("%1$-25s %2$-10s\n",numberFiles+" FILES",TotalSpace+" bytes");
+		System.out.format("%1$-25s %2$-10s\n",numberDir+" DIRS",freeSpace+" bytes libres");
+	}
+
+	protected void echoTxt(String a,String h,int i,String c) throws IOException {
 		char[] b = new char[a.length()];
 		h=h+'/';	
 		for(int z=i+2;z<a.length();z++) {
@@ -64,10 +82,7 @@ public class Functionalities {
 		}
 	}
 			
-			
-		
-	
-	public void echoPrint(String a,String h) {
+	protected void echoPrint(String a,String h) {
 		char[] b = new char[a.length()];
 		String c="";
 		for (int i=0;i<a.length();i++) {
@@ -85,20 +100,71 @@ public class Functionalities {
 		System.out.println(c);
 	}
 	
-	public void copy() {
+	protected void move(String a,String d,String k) {
+		char[] b = new char[a.length()];
+		char[] v = new char[k.length()];
+		for (int i=0;i<a.length();i++) {
+			if(i==0) {
+				b[i]=a.charAt(i);
+				d=d+'/'+b[i];
+			}
+			else {
+				b[i]=a.charAt(i);
+				d=d+b[i];
+			}
+		}
+		File c = new File(d);
+	    if(c.renameTo(new File(k))) {
+	    	c.delete();
+	    }
+	    else if(new File(k).exists()){
+	    	System.out.println("File already exists in the destination folder");
+	    	
+	    }
+	    else{
+	    	System.out.println("The system couldn't find the specified file or route");
+	    }
+	}
+	
+	protected void delete(String d,String a) {
+		char[] b = new char[a.length()];
+		for (int i=0;i<a.length();i++) {
+			if(i==0) {
+				d=d+'/';
+			}
+			else {
+				b[i]=a.charAt(i);
+				d=d+b[i];
+			}
+		}
+		File c = new File(d);
+		if(c.delete()) {
+		}
+		else {
+			if(c.isDirectory()) {
+				System.out.println("¿Are you sure? Y/N");
+				String p=sn.next();
+				if(p.equalsIgnoreCase("y")) {
+					File[] deletion = c.listFiles();
+					for(File files : deletion) {
+						files.delete();
+					}
+				c.delete();	
+				}
+				else if(p.equalsIgnoreCase("n")) {
+				}
+			}
+			else {
+				System.out.println("No se pudo encontrar  "+d);
+			}
+		}
+	}
+	
+	protected void move() {
 		
 	}
 	
-	public void delete() {
-		
-	}
-	
-	public void move() {
-		
-	}
-	
-	public String mkdir(String h,String a,int o) {
-		path[o]=h;
+	protected String mkdir(String h,String a) {
 		for(int i=0;i<a.length();i++) {
 			if(i==0) {
 				h=h+'/';
@@ -115,7 +181,7 @@ public class Functionalities {
 		return h;
 	}
 	
-	public void rmvdir() {
+	protected void rmvdir() {
 		
 	}
 }
