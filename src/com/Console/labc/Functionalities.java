@@ -1,9 +1,17 @@
 package com.Console.labc;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.io.*;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
-import java.util.Scanner;;
+import java.util.Scanner;
+
+import javax.swing.JFrame;
+import javax.swing.JTextField;
+
+import sun.audio.AudioPlayer;
+import sun.audio.AudioStream;;
 
 
 public class Functionalities {
@@ -116,6 +124,16 @@ public class Functionalities {
 					d=d+b[i];
 				}
 			}
+			for (int i=0;i<a.length();i++) {
+				if(i==0) {
+					b[i]=a.charAt(i);
+					k=k+'/'+b[i];
+				}
+				else {
+					b[i]=a.charAt(i);
+					k=k+b[i];
+				}
+			}
 			File c = new File(d);
 		    if(c.renameTo(new File(k))) {
 		    	c.delete();
@@ -151,6 +169,12 @@ public class Functionalities {
 			}
 			else {
 				if(c.isDirectory()) {
+					InputStream in3;
+					try {
+						in3 = new FileInputStream("sounds/are-you-sure-about-that.wav");
+						AudioStream audio3 = new AudioStream(in3);
+						AudioPlayer.player.start(audio3);
+					} catch (Exception e) {}
 					System.out.println("¿Are you sure? Y/N");
 					String p=sn.next();
 					if(p.equalsIgnoreCase("y")) {
@@ -164,7 +188,7 @@ public class Functionalities {
 					}
 				}
 				else {
-					System.out.println("No se pudo encontrar  "+d);
+					System.out.println("No se pudo encontrar  "+d+"\n");
 				}
 			}
 		}
@@ -197,7 +221,6 @@ public class Functionalities {
 		}
 		File source = new File(d);
 		File destination = new File(j);
-		System.out.print(j  + d);
 		if (destination.exists()){
 			System.out.println("File already exists");
 		}
@@ -225,6 +248,40 @@ public class Functionalities {
 			System.out.println("Directory already exists");
 		}
 		return h;
+	}
+	
+	protected boolean exit() {
+		InputStream in3;
+		boolean keepRunning;
+		try {
+			in3 = new FileInputStream("sounds/are-you-sure-about-that.wav");
+			AudioStream audio3 = new AudioStream(in3);
+			AudioPlayer.player.start(audio3);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("Y/N");
+		String exit = sn.next();
+		if(exit.equalsIgnoreCase("Y")){
+			
+			JFrame f = new JFrame("Gracias por el 20");
+			JTextField tf = new JTextField("Gracias por el 20 profesor");
+			f.setSize(340, 300);
+			tf.setBounds(0,0,300,300);
+			tf.setBackground(Color.BLACK);
+			tf.setForeground(Color.white);
+			tf.setFont(new Font("perro loco",Font.ITALIC,24));
+			f.add(tf);
+			f.setVisible(true);
+			f.setAlwaysOnTop(true);
+			keepRunning=false;
+			return keepRunning;
+		}
+		else {
+			keepRunning=true;
+			return keepRunning;
+		}
 	}
 	
 }
