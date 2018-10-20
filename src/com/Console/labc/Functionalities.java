@@ -3,15 +3,12 @@ package com.Console.labc;
 import java.io.*;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
-import java.util.Scanner;
+import java.util.Scanner;;
 
 
 public class Functionalities {
-	private char chars[];
-	private String[] paths;
-	private String[] path = new String[30];
-	private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyy HH:mm:ss");
-	private Scanner sn = new Scanner(System.in);
+	protected SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyy HH:mm:ss");
+	protected Scanner sn = new Scanner(System.in);
 	
 	protected String moveDir(String d,String a) {
 		char[] b = new char[a.length()];
@@ -36,10 +33,6 @@ public class Functionalities {
 	
 	}
 	
-	protected String moveDir(File a) {
-		return a.getParent();
-	}
-	
 	protected void showDir(File a) throws IOException {
 		File[] content = a.listFiles();
 		int numberDir=0;
@@ -50,11 +43,11 @@ public class Functionalities {
 		for(File files : content ) {
 			if(files.isDirectory()) {
 				numberDir+=1;
-				System.out.format("%1$-25s %2$-10s %3$-5s %4$-10s\n",sdf.format(files.lastModified()),"<DIR>",files.length(),files.getName());
+				System.out.format("%1$-25s %2$-10s %3$-10s %4$-10s\n",sdf.format(files.lastModified()),"<DIR>",files.length(),files.getName());
 			}
 			else {
 				numberFiles+=1;
-				System.out.format("%1$-25s %2$-10s %3$-5s %4$-10s\n",sdf.format(files.lastModified()),"<FILE>",files.length(),files.getName());
+				System.out.format("%1$-25s %2$-10s %3$-10s %4$-10s\n",sdf.format(files.lastModified()),"<FILE>",files.length(),files.getName());
 			}
 			
 			freeSpace-=files.length();
@@ -66,20 +59,27 @@ public class Functionalities {
 
 	protected void echoTxt(String a,String h,int i,String c) throws IOException {
 		char[] b = new char[a.length()];
-		h=h+'/';	
-		for(int z=i+2;z<a.length();z++) {
-			b[z]=a.charAt(z);
-			h=h+b[z];
+		if(h.equalsIgnoreCase("C:\\Windows")) {
+			System.out.println("Access denied");
 		}
-		File perro = new File(h);
-		if(!perro.exists()) {
-			OutputStream out = new FileOutputStream(perro);
-			out.write(c.getBytes());
-			out.close();
+		else {
+			h=h+'/';	
+			for(int z=i+2;z<a.length();z++) {
+				b[z]=a.charAt(z);
+				h=h+b[z];
+			}
+			File perro = new File(h);
+			
+			if(!perro.exists()) {
+				OutputStream out = new FileOutputStream(perro);
+				out.write(c.getBytes());
+				out.close();
+			}
+			else{
+				System.out.println("File already exists");
+			}
 		}
-		else{
-			System.out.println("File already exists");
-		}
+		
 	}
 			
 	protected void echoPrint(String a,String h) {
@@ -101,8 +101,80 @@ public class Functionalities {
 	}
 	
 	protected void move(String a,String d,String k) {
+		if(d.equalsIgnoreCase("C:\\Windows")) {
+			System.out.println("Access denied");
+		}
+		else {
+			char[] b = new char[a.length()];
+			for (int i=0;i<a.length();i++) {
+				if(i==0) {
+					b[i]=a.charAt(i);
+					d=d+'/'+b[i];
+				}
+				else {
+					b[i]=a.charAt(i);
+					d=d+b[i];
+				}
+			}
+			File c = new File(d);
+		    if(c.renameTo(new File(k))) {
+		    	c.delete();
+		    }
+		    else if(new File(k).exists()){
+		    	System.out.println("File already exists in the destination folder");
+		    	
+		    }
+		    else{
+		    	System.out.println("The system couldn't find the specified file or route");
+		    }
+		}
+	}
+		
+	
+	protected void delete(String d,String a) {
+		char[] b = new char[a.length()];
+		if(d.equalsIgnoreCase("C:\\Windows")) {
+			System.out.println("Access denied");
+		}
+		else {
+			for (int i=0;i<a.length();i++) {
+				if(i==0) {
+					d=d+'/';
+				}
+				else {
+					b[i]=a.charAt(i);
+					d=d+b[i];
+				}
+			}
+			File c = new File(d);
+			if(c.delete()) {
+			}
+			else {
+				if(c.isDirectory()) {
+					System.out.println("¿Are you sure? Y/N");
+					String p=sn.next();
+					if(p.equalsIgnoreCase("y")) {
+						File[] deletion = c.listFiles();
+						for(File files : deletion) {
+							files.delete();
+						}
+					c.delete();	
+					}
+					else if(p.equalsIgnoreCase("n")) {
+					}
+				}
+				else {
+					System.out.println("No se pudo encontrar  "+d);
+				}
+			}
+		}
+	}
+		
+	
+	protected void copy(String a,String d,String k) throws IOException {
 		char[] b = new char[a.length()];
 		char[] v = new char[k.length()];
+		String j=d;
 		for (int i=0;i<a.length();i++) {
 			if(i==0) {
 				b[i]=a.charAt(i);
@@ -113,54 +185,28 @@ public class Functionalities {
 				d=d+b[i];
 			}
 		}
-		File c = new File(d);
-	    if(c.renameTo(new File(k))) {
-	    	c.delete();
-	    }
-	    else if(new File(k).exists()){
-	    	System.out.println("File already exists in the destination folder");
-	    	
-	    }
-	    else{
-	    	System.out.println("The system couldn't find the specified file or route");
-	    }
-	}
-	
-	protected void delete(String d,String a) {
-		char[] b = new char[a.length()];
-		for (int i=0;i<a.length();i++) {
-			if(i==0) {
-				d=d+'/';
+		for (int z=0;z<k.length();z++) {
+			if(z==0) {
+				v[z]=k.charAt(z);
+				j=j+'/'+v[z];
 			}
 			else {
-				b[i]=a.charAt(i);
-				d=d+b[i];
+				v[z]=k.charAt(z);
+				j=j+v[z];
 			}
 		}
-		File c = new File(d);
-		if(c.delete()) {
+		File source = new File(d);
+		File destination = new File(j);
+		System.out.print(j  + d);
+		if (destination.exists()){
+			System.out.println("File already exists");
+		}
+		else if (!source.exists()) {
+			System.out.println("Couldn't find the specified file	");
 		}
 		else {
-			if(c.isDirectory()) {
-				System.out.println("¿Are you sure? Y/N");
-				String p=sn.next();
-				if(p.equalsIgnoreCase("y")) {
-					File[] deletion = c.listFiles();
-					for(File files : deletion) {
-						files.delete();
-					}
-				c.delete();	
-				}
-				else if(p.equalsIgnoreCase("n")) {
-				}
-			}
-			else {
-				System.out.println("No se pudo encontrar  "+d);
-			}
+			Files.copy(source.toPath(),destination.toPath());
 		}
-	}
-	
-	protected void move() {
 		
 	}
 	
@@ -181,7 +227,4 @@ public class Functionalities {
 		return h;
 	}
 	
-	protected void rmvdir() {
-		
-	}
 }
