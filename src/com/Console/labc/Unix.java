@@ -25,7 +25,7 @@ public class Unix extends Functionalities{
 				echoPrint(sn.nextLine(),camino);	
 			}
 			else if (command.equalsIgnoreCase("cp")) {
-				copy(sn.nextLine(),camino);
+				copy(sn.next(),camino,sn.next());
 			}
 			else if (command.equalsIgnoreCase("rm")){
 				delete(camino,sn.nextLine());

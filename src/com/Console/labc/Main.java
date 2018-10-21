@@ -65,7 +65,7 @@ public class Main {
 			
 			
 			else if(command.equalsIgnoreCase("copy")) {
-				fun.copy(sn.nextLine(), camino);
+				fun.copy(sn.next(), camino,sn.next());
 			}
 			
 			else if (command.equalsIgnoreCase("help")) {

@@ -200,11 +200,8 @@ public class Functionalities {
 	}
 		
 	
-	public void copy(String c,String d) throws IOException {
-		char[] b;char[] v;String[] split;
-		split = c.split(".txt");
-		String a=split[0]+".txt";
-		String k=split[1]+".txt";
+	public void copy(String a,String d,String k) throws IOException {
+		char[] b;char[] v;
 		String j=d;
 	    b = new char[a.length()];
 		v = new char[k.length()];
