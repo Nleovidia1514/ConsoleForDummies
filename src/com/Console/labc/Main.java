@@ -14,27 +14,29 @@ import javax.swing.JTextField;
 
 public class Main {
 	
-	static Functionalities fun = new Functionalities();
-	static String camino ="C:/Users/User/Mis documentos/JAVA/test";
-	Object p[];
-	static Object[] poth = new Object[20];
-	private static String command="";
-	static boolean keepRunning=true;
+	private static Functionalities fun = new Functionalities();
+	private static String camino;
+	private static  String command="";
+	private static boolean keepRunning=true;
 	
 		
 	public static void main(String[] args) throws IOException{
-		Scanner sn = new Scanner(System.in);
-		InputStream in = new FileInputStream("sounds/windows.wav");
-		AudioStream audio = new AudioStream(in);
+		Scanner sn;
+		InputStream in;
+		AudioStream audio;
+		File hello;
+		Windows win;
+		sn = new Scanner(System.in);
+		in = new FileInputStream("sounds/windows.wav");
+		audio = new AudioStream(in);
+        hello = new File("");
+		win = new Windows();
 		AudioPlayer.player.start(audio);
-		
-        File hello = new File("");
-		Windows win = new Windows();
 		camino=hello.getAbsolutePath();
 		while(keepRunning) {
+			File path;
 			System.out.print("\n"+camino+'>');
-			File path = new File(camino);
-		
+			path = new File(camino);
 			command = sn.next();
 			if(command.equalsIgnoreCase("echo")) {
 				fun.echoPrint(sn.nextLine(),camino);
@@ -63,11 +65,12 @@ public class Main {
 			
 			
 			else if(command.equalsIgnoreCase("copy")) {
-				fun.copy(sn.next(), camino, sn.next());
+				fun.copy(sn.nextLine(), camino);
 			}
 			
 			else if (command.equalsIgnoreCase("help")) {
-				Scanner help = new Scanner(new File("WindowsHelp.txt"));
+				Scanner help;
+				help = new Scanner(new File("WindowsHelp.txt"));
 				while(help.hasNextLine()) {
 					System.out.println(help.nextLine());
 				}
@@ -82,14 +85,17 @@ public class Main {
 			}
 			
 			else if(command.equalsIgnoreCase("UNIX")) {
-				Unix unix = new Unix();
+				Unix unix;
+				unix = new Unix();
 				unix.unixConsole(path, camino);
 			}
 			
 			else if(command.equalsIgnoreCase("zelda")) {
 				audio.close();
-				InputStream in2 = new FileInputStream("sounds/hey.wav");
-				AudioStream audio2 = new AudioStream(in2);
+				InputStream in2;
+				AudioStream audio2;
+				in2 = new FileInputStream("sounds/hey.wav");
+				audio2 = new AudioStream(in2);
 				AudioPlayer.player.start(audio2);
 			}
 			
@@ -98,8 +104,7 @@ public class Main {
 		
 			}
 		}
-	}
-		
+	}	
 }
 		
 	

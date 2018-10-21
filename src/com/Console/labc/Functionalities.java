@@ -41,7 +41,7 @@ public class Functionalities {
 	
 	}
 	
-	protected void showDir(File a) throws IOException {
+	public void showDir(File a) throws IOException {
 		File[] content = a.listFiles();
 		int numberDir=0;
 		int numberFiles=0;
@@ -65,22 +65,23 @@ public class Functionalities {
 		System.out.format("%1$-25s %2$-10s\n",numberDir+" DIRS",freeSpace+" bytes libres");
 	}
 
-	protected void echoTxt(String a,String h,int i,String c) throws IOException {
-		char[] b = new char[a.length()];
+	public void echoTxt(String a,String h) throws IOException {
+		char[] b = new char[a.length()]; String[] split;
+		split = a.split(">");
+		a=split[1];
 		if(h.equalsIgnoreCase("C:\\Windows")) {
 			System.out.println("Access denied");
 		}
 		else {
 			h=h+'/';	
-			for(int z=i+2;z<a.length();z++) {
-				b[z]=a.charAt(z);
-				h=h+b[z];
+			for(int i=0;i<a.length();i++) {
+				b[i]=a.charAt(i);
+				h=h+b[i];
 			}
 			File perro = new File(h);
-			
 			if(!perro.exists()) {
 				OutputStream out = new FileOutputStream(perro);
-				out.write(c.getBytes());
+				out.write(split[0].getBytes());
 				out.close();
 			}
 			else{
@@ -90,25 +91,29 @@ public class Functionalities {
 		
 	}
 			
-	protected void echoPrint(String a,String h) {
+	public void echoPrint(String a,String h) {
 		char[] b = new char[a.length()];
 		String c="";
-		for (int i=0;i<a.length();i++) {
-			try{
-				b[i]=a.charAt(i+1);
-				if(b[i]=='>') {
-					echoTxt(a,h,i,c);
+		if(a.endsWith(".txt")) {
+			try {
+				echoTxt(a,h);
+			} catch (IOException e) {}
+		}
+		else {
+			for (int i=0;i<a.length();i++) {
+				try{
+					b[i]=a.charAt(i+1);
+					c=c+b[i];
+				}catch(Exception e) {
 					break;
 				}
-				c=c+b[i];
-			}catch(Exception e) {
-				break;
 			}
-		}
-		System.out.println(c);
+			System.out.println(c);
+		}	
 	}
 	
-	protected void move(String a,String d,String k) {
+	public void move(String a,String d,String k) {
+		
 		if(d.equalsIgnoreCase("C:\\Windows")) {
 			System.out.println("Access denied");
 		}
@@ -149,7 +154,7 @@ public class Functionalities {
 	}
 		
 	
-	protected void delete(String d,String a) {
+	public void delete(String d,String a) {
 		char[] b = new char[a.length()];
 		if(d.equalsIgnoreCase("C:\\Windows")) {
 			System.out.println("Access denied");
@@ -195,14 +200,18 @@ public class Functionalities {
 	}
 		
 	
-	protected void copy(String a,String d,String k) throws IOException {
-		char[] b = new char[a.length()];
-		char[] v = new char[k.length()];
+	public void copy(String c,String d) throws IOException {
+		char[] b;char[] v;String[] split;
+		split = c.split(".txt");
+		String a=split[0]+".txt";
+		String k=split[1]+".txt";
 		String j=d;
+	    b = new char[a.length()];
+		v = new char[k.length()];
 		for (int i=0;i<a.length();i++) {
 			if(i==0) {
 				b[i]=a.charAt(i);
-				d=d+'/'+b[i];
+				d=d+'/';
 			}
 			else {
 				b[i]=a.charAt(i);
@@ -212,7 +221,7 @@ public class Functionalities {
 		for (int z=0;z<k.length();z++) {
 			if(z==0) {
 				v[z]=k.charAt(z);
-				j=j+'/'+v[z];
+				j=j+'/';
 			}
 			else {
 				v[z]=k.charAt(z);
@@ -233,7 +242,7 @@ public class Functionalities {
 		
 	}
 	
-	protected String mkdir(String h,String a) {
+	public String mkdir(String h,String a) {
 		for(int i=0;i<a.length();i++) {
 			if(i==0) {
 				h=h+'/';
@@ -250,7 +259,7 @@ public class Functionalities {
 		return h;
 	}
 	
-	protected boolean exit() {
+	public boolean exit() {
 		InputStream in3;
 		boolean keepRunning;
 		try {

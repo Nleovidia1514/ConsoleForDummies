@@ -10,7 +10,7 @@ public class Unix extends Functionalities{
 		boolean keepRunning=true;
 		Windows win = new Windows();
 		while(keepRunning) {
-			System.out.print(camino+'>');
+			System.out.print("\n"+camino+'>');
 			File path = new File(camino);
 			String command=sn.next();
 			if (command.equalsIgnoreCase("ls")) {
@@ -25,7 +25,7 @@ public class Unix extends Functionalities{
 				echoPrint(sn.nextLine(),camino);	
 			}
 			else if (command.equalsIgnoreCase("cp")) {
-				copy(sn.next(),camino,sn.next());
+				copy(sn.nextLine(),camino);
 			}
 			else if (command.equalsIgnoreCase("rm")){
 				delete(camino,sn.nextLine());
