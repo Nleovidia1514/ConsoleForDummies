@@ -5,16 +5,33 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class Unix extends Functionalities{
+	String u="";
+	static File start = new File("");
+	private static String camino = start.getAbsolutePath();
+	private static  String command="";
 	
-	public void unixConsole(File a,String camino) throws IOException {
+	public void unixConsole() throws IOException {
 		boolean keepRunning=true;
 		Windows win = new Windows();
 		while(keepRunning) {
-			System.out.print("\n"+camino+'>');
+			u="";
+			for(int i=0;i<camino.length();i++) {
+				char b[];
+				b = new char[camino.length()];
+				if(camino.charAt(i)=='\\') {
+					b[i]='/';
+				}
+				else {
+					b[i]=camino.charAt(i);
+				}
+				
+				u=u+b[i];
+			}
+			System.out.print("\n"+u+'>');
 			File path = new File(camino);
-			String command=sn.next();
+			command=sn.next();
 			if (command.equalsIgnoreCase("ls")) {
-				showDir(a);
+				showDir(path);
 		}
 			
 			else if (command.equalsIgnoreCase("cd")) {
@@ -25,7 +42,7 @@ public class Unix extends Functionalities{
 				echoPrint(sn.nextLine(),camino);	
 			}
 			else if (command.equalsIgnoreCase("cp")) {
-				copy(sn.next(),camino,sn.next());
+				copy(sn.next(),camino,sn.nextLine());
 			}
 			else if (command.equalsIgnoreCase("rm")){
 				delete(camino,sn.nextLine());
@@ -34,18 +51,20 @@ public class Unix extends Functionalities{
 				move(sn.next(),camino,sn.next());
 			}
 			else if (command.equalsIgnoreCase("mkdir")){
-				camino=mkdir(camino,sn.nextLine());
+				mkdir(camino,sn.nextLine());
 			}
 			else if(command.equalsIgnoreCase("pwd")) {
 				System.out.println(camino);
 			}
+			
+			else if(command.equalsIgnoreCase("rmdir")) {
+				rmdir(sn.nextLine(),camino);
+			}
+			
 			else if(command.equalsIgnoreCase("Date")) {
 				System.out.println("The current date is:   "+sdf.format(System.currentTimeMillis()));
 			}
-			else if(command.equalsIgnoreCase("Windows")) {
-				Main main = new Main();
-				main.main(null);
-			}
+			
 			else if(command.equalsIgnoreCase("exit")) {
 				exit();
 				System.in.read();

@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
 import java.util.Scanner;
 
@@ -12,6 +13,7 @@ import javax.swing.JTextField;
 
 import sun.audio.AudioPlayer;
 import sun.audio.AudioStream;;
+
 
 
 public class Functionalities {
@@ -41,7 +43,7 @@ public class Functionalities {
 	
 	}
 	
-	public void showDir(File a) throws IOException {
+	protected void showDir(File a) throws IOException {
 		File[] content = a.listFiles();
 		int numberDir=0;
 		int numberFiles=0;
@@ -65,7 +67,7 @@ public class Functionalities {
 		System.out.format("%1$-25s %2$-10s\n",numberDir+" DIRS",freeSpace+" bytes libres");
 	}
 
-	public void echoTxt(String a,String h) throws IOException {
+	protected void echoTxt(String a,String h) throws IOException {
 		char[] b = new char[a.length()]; String[] split;
 		split = a.split(">");
 		a=split[1];
@@ -91,10 +93,10 @@ public class Functionalities {
 		
 	}
 			
-	public void echoPrint(String a,String h) {
+	protected void echoPrint(String a,String h) {
 		char[] b = new char[a.length()];
 		String c="";
-		if(a.endsWith(".txt")) {
+		if(a.contains(">") && a.endsWith(".txt")) {
 			try {
 				echoTxt(a,h);
 			} catch (IOException e) {}
@@ -112,12 +114,28 @@ public class Functionalities {
 		}	
 	}
 	
-	public void move(String a,String d,String k) {
+	protected void move(String a,String d,String k) {
 		
+		String o = "";
 		if(d.equalsIgnoreCase("C:\\Windows")) {
 			System.out.println("Access denied");
 		}
 		else {
+			if(k.charAt(1)=='C') {
+				o=k.trim()+'/'+a;
+			}
+			else {
+				char[] b = new char[k.length()];
+				for (int i=0;i<k.length();i++) {
+					if(i==0) {
+						o=d+'/';
+					}
+					else {
+						b[i]=k.charAt(i);
+						o=o+b[i];
+					}
+				}
+			}
 			char[] b = new char[a.length()];
 			for (int i=0;i<a.length();i++) {
 				if(i==0) {
@@ -129,23 +147,16 @@ public class Functionalities {
 					d=d+b[i];
 				}
 			}
-			for (int i=0;i<a.length();i++) {
-				if(i==0) {
-					b[i]=a.charAt(i);
-					k=k+'/'+b[i];
-				}
-				else {
-					b[i]=a.charAt(i);
-					k=k+b[i];
-				}
-			}
+		
 			File c = new File(d);
-		    if(c.renameTo(new File(k))) {
-		    	c.delete();
+			File g = new File(o+"\\"+a);
+			System.out.println(g);
+			if(g.exists()){
+		    	System.out.println("File already exists in the destination folder");	
 		    }
-		    else if(new File(k).exists()){
-		    	System.out.println("File already exists in the destination folder");
-		    	
+			else if(c.renameTo(g)) {
+		    	if(c.delete()) {}
+		    	System.out.format("%1$-20s\n","Se han movido 1 archivo(s)");
 		    }
 		    else{
 		    	System.out.println("The system couldn't find the specified file or route");
@@ -154,7 +165,7 @@ public class Functionalities {
 	}
 		
 	
-	public void delete(String d,String a) {
+	protected void delete(String d,String a) {
 		char[] b = new char[a.length()];
 		if(d.equalsIgnoreCase("C:\\Windows")) {
 			System.out.println("Access denied");
@@ -171,26 +182,11 @@ public class Functionalities {
 			}
 			File c = new File(d);
 			if(c.delete()) {
+				System.out.format("%1$-20s\n","Se han eliminado 1 archivo(s)");
 			}
 			else {
 				if(c.isDirectory()) {
-					InputStream in3;
-					try {
-						in3 = new FileInputStream("sounds/are-you-sure-about-that.wav");
-						AudioStream audio3 = new AudioStream(in3);
-						AudioPlayer.player.start(audio3);
-					} catch (Exception e) {}
-					System.out.println("¿Are you sure? Y/N");
-					String p=sn.next();
-					if(p.equalsIgnoreCase("y")) {
-						File[] deletion = c.listFiles();
-						for(File files : deletion) {
-							files.delete();
-						}
-					c.delete();	
-					}
-					else if(p.equalsIgnoreCase("n")) {
-					}
+					System.out.println(c.getName()+" is not empty");
 				}
 				else {
 					System.out.println("No se pudo encontrar  "+d+"\n");
@@ -200,46 +196,54 @@ public class Functionalities {
 	}
 		
 	
-	public void copy(String a,String d,String k) throws IOException {
+	protected void copy(String a,String d,String k) throws IOException {
 		char[] b;char[] v;
 		String j=d;
+		File destination;
 	    b = new char[a.length()];
 		v = new char[k.length()];
+		if (k.equalsIgnoreCase(" .")) {
+			destination = new File(d+"\\"+a);
+		}
+		else {
+			for (int z=0;z<k.length();z++) {
+				if(z==0) {
+					v[z]=k.charAt(z);
+					j=j+'/';
+				}
+				else {
+					v[z]=k.charAt(z);
+					j=j+v[z];
+				}
+			}
+			destination = new File(j+"\\"+a);
+		}
 		for (int i=0;i<a.length();i++) {
 			if(i==0) {
 				b[i]=a.charAt(i);
-				d=d+'/';
+				d=d+'/'+b[i];
 			}
 			else {
 				b[i]=a.charAt(i);
 				d=d+b[i];
 			}
 		}
-		for (int z=0;z<k.length();z++) {
-			if(z==0) {
-				v[z]=k.charAt(z);
-				j=j+'/';
-			}
-			else {
-				v[z]=k.charAt(z);
-				j=j+v[z];
-			}
-		}
+		
 		File source = new File(d);
-		File destination = new File(j);
-		if (destination.exists()){
-			System.out.println("File already exists");
-		}
-		else if (!source.exists()) {
+		if (!source.exists()) {
 			System.out.println("Couldn't find the specified file	");
 		}
+		else if(source.toString().equalsIgnoreCase(destination.toString())) {
+			System.out.println("Can't copy over itself");
+		}
 		else {
-			Files.copy(source.toPath(),destination.toPath());
+			Files.copy(source.toPath(),destination.toPath(),StandardCopyOption.REPLACE_EXISTING);
+			System.out.format("%1$-20s\n","Se han copiado 1 archivo(s)");
 		}
 		
 	}
 	
-	public String mkdir(String h,String a) {
+	protected void mkdir(String h,String a) {
 		for(int i=0;i<a.length();i++) {
 			if(i==0) {
 				h=h+'/';
@@ -253,10 +257,9 @@ public class Functionalities {
 		if (!exists) {
 			System.out.println("Directory already exists");
 		}
-		return h;
 	}
 	
-	public boolean exit() {
+	protected boolean exit() {
 		InputStream in3;
 		boolean keepRunning;
 		try {
@@ -270,7 +273,6 @@ public class Functionalities {
 		System.out.println("Y/N");
 		String exit = sn.next();
 		if(exit.equalsIgnoreCase("Y")){
-			
 			JFrame f = new JFrame("Gracias por el 20");
 			JTextField tf = new JTextField("Gracias por el 20 profesor");
 			f.setSize(340, 300);
@@ -290,4 +292,55 @@ public class Functionalities {
 		}
 	}
 	
-}
+	protected void rmdir(String a,String d) {
+		char[] b = new char[a.length()];
+		if(d.equalsIgnoreCase("C:\\Windows")) {
+			System.out.println("Access denied");
+		}
+		else {
+			for (int i=0;i<a.length();i++) {
+				if(i==0) {
+					d=d+'/';
+				}
+				else {
+					b[i]=a.charAt(i);
+					d=d+b[i];
+				}
+			}
+			File c = new File(d);
+			if(!c.isDirectory()) {
+				System.out.println(a+" is not a directory");
+			}
+			else {
+				System.out.println("Are you sure? Y/N");
+				InputStream in3;
+				try {
+					in3 = new FileInputStream("sounds/are-you-sure-about-that.wav");
+					AudioStream audio3 = new AudioStream(in3);
+					AudioPlayer.player.start(audio3);
+				} catch (Exception e) {}
+				String sure=sn.next();
+				if(sure.equalsIgnoreCase("y")) {
+					if(remove(c)) {
+						System.out.println("Deleted: "+c.getName());
+					}
+					else {
+						System.out.println(c.getName()+" could not be deleted");
+					}
+				}
+			}
+		}
+	}
+	
+	private boolean remove(File files) {
+		if(files.isDirectory()){
+			File[] content = files.listFiles();
+			for(File delete : content) {
+				remove(delete);
+				System.out.println("deleted: "+delete.getName());
+			}
+		}
+		return files.delete();
+	}
+	
+}	
