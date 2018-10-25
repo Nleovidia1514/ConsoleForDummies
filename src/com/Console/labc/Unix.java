@@ -1,8 +1,13 @@
 package com.Console.labc;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Scanner;
+
+import sun.audio.AudioPlayer;
+import sun.audio.AudioStream;
 
 public class Unix extends Functionalities{
 	String u="";
@@ -32,7 +37,7 @@ public class Unix extends Functionalities{
 			command=sn.next();
 			if (command.equalsIgnoreCase("ls")) {
 				showDir(path);
-		}
+		    }
 			
 			else if (command.equalsIgnoreCase("cd")) {
 				camino=win.cd(camino, path,sn.nextLine());
@@ -42,7 +47,7 @@ public class Unix extends Functionalities{
 				echoPrint(sn.nextLine(),camino);	
 			}
 			else if (command.equalsIgnoreCase("cp")) {
-				copy(sn.next(),camino,sn.nextLine());
+				copy(sn.next(),camino,sn.next().trim());
 			}
 			else if (command.equalsIgnoreCase("rm")){
 				delete(camino,sn.nextLine());
@@ -70,7 +75,16 @@ public class Unix extends Functionalities{
 				System.in.read();
 				System.exit(1);
 			}
-			else if(command.equals("help")) {
+			
+			else if(command.equalsIgnoreCase("zelda")) {
+				InputStream in2;
+				AudioStream audio2;
+				in2 = new FileInputStream("sounds/hey.wav");
+				audio2 = new AudioStream(in2);
+				AudioPlayer.player.start(audio2);
+			}
+			
+			else if(command.equalsIgnoreCase("help")) {
 				Scanner help = new Scanner(new File("UnixHelp.txt"));
 				while(help.hasNextLine()) {
 					System.out.println(help.nextLine());

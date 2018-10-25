@@ -94,49 +94,172 @@ public class Functionalities {
 	}
 			
 	protected void echoPrint(String a,String h) {
-		char[] b = new char[a.length()];
-		String c="";
-		if(a.contains(">") && a.endsWith(".txt")) {
-			try {
-				echoTxt(a,h);
-			} catch (IOException e) {}
+		Scanner sn1 = new Scanner(a);
+		if(sn1.hasNext()) {
+			char[] b = new char[a.length()];
+			String c="";
+			if(a.contains(">") && a.endsWith(".txt")) {
+				try {
+					echoTxt(a,h);
+				} catch (IOException e) {}
+			}
+			else {
+				for (int i=0;i<a.length();i++) {
+					try{
+						b[i]=a.charAt(i+1);
+						c=c+b[i];
+					}catch(Exception e) {
+						break;
+					}
+				}
+				System.out.println(c);
+			}	
 		}
 		else {
-			for (int i=0;i<a.length();i++) {
-				try{
-					b[i]=a.charAt(i+1);
-					c=c+b[i];
-				}catch(Exception e) {
-					break;
-				}
-			}
-			System.out.println(c);
-		}	
+			System.out.println("Wrong command syntax");
+		}
 	}
 	
 	protected void move(String a,String d,String k) {
-		
+		Scanner sn1 = new Scanner(a);
+		Scanner sn2 = new Scanner(k);
 		String o = "";
-		if(d.equalsIgnoreCase("C:\\Windows")) {
-			System.out.println("Access denied");
-		}
-		else {
-			if(k.charAt(1)=='C') {
-				o=k.trim()+'/'+a;
+		if(sn1.hasNext() && sn2.hasNext()) {
+			if(d.equalsIgnoreCase("C:\\Windows")) {
+				System.out.println("Access denied");
 			}
 			else {
-				char[] b = new char[k.length()];
-				for (int i=0;i<k.length();i++) {
+				if(k.charAt(1)=='C') {
+					o=k.trim()+'/'+a;
+				}
+				else {
+					char[] b = new char[k.length()];
+					for (int i=0;i<k.length();i++) {
+						if(i==0) {
+							o=d+'/';
+						}
+						else {
+							b[i]=k.charAt(i);
+							o=o+b[i];
+						}
+					}
+				}
+				char[] b = new char[a.length()];
+				for (int i=0;i<a.length();i++) {
 					if(i==0) {
-						o=d+'/';
+						b[i]=a.charAt(i);
+						d=d+'/'+b[i];
 					}
 					else {
-						b[i]=k.charAt(i);
-						o=o+b[i];
+						b[i]=a.charAt(i);
+						d=d+b[i];
+					}
+				}
+			
+				File c = new File(d);
+				File g;
+				if(new File(o).isDirectory()) {
+					g = new File(o+"\\"+a);
+				}
+				else {
+					g = new File(o);
+				}
+				if(g.exists()){
+			    	System.out.println("File already exists in the destination folder");	
+			    }
+				else if(c.renameTo(g)) {
+			    	if(c.delete()) {}
+			    	System.out.format("%1$-20s\n","Se han movido 1 archivo(s)");
+			    }
+			    else{
+			    	System.out.println("The system couldn't find the specified file or route");
+			    }
+			}
+		}
+		else {
+			System.out.println("Wrong command syntax");
+		}
+	}
+		
+	
+	protected void delete(String d,String a) {
+		Scanner sn1 = new Scanner(a);
+		File c;
+		if(sn1.hasNext()) {
+			char[] b = new char[a.length()];
+			if(d.equalsIgnoreCase("C:\\Windows")) {
+				System.out.println("Access denied");
+			}
+			else {
+				if(a.trim().startsWith("c:\\")||a.trim().startsWith("C:\\")) {
+					c = new File(a);
+				}
+				else {
+					for (int i=0;i<a.length();i++) {
+						if(i==0) {
+							d=d+'/';
+						}
+						else {
+							b[i]=a.charAt(i);
+							d=d+b[i];
+						}
+					}
+					c = new File(d);
+				}
+				if(c.delete()) {
+					System.out.format("%1$-20s\n","Se han eliminado 1 archivo(s)");
+				}
+				else {
+					if(c.isDirectory()) {
+						System.out.println(c.getName()+" is not empty");
+					}
+					else {
+						System.out.println("No se pudo encontrar  "+d+"\n");
 					}
 				}
 			}
-			char[] b = new char[a.length()];
+		}
+		else {
+			System.out.println("Wrong command syntax");
+		}
+	}
+		
+	
+	protected void copy(String a,String d,String k) throws IOException {
+		char[] b,v;
+		String j=d;
+		File destination;
+		Scanner sn1,sn2;
+		sn1 = new Scanner(a);
+		sn2 = new Scanner(k);
+		if(sn1.hasNext() && sn2.hasNext()) {
+			b = new char[a.length()];
+			v = new char[k.length()];
+			if (k.trim().equalsIgnoreCase(".")) {
+				destination = new File(d+"\\"+a);
+			}
+			else if(k.trim().startsWith("C:\\")||k.trim().startsWith("c:\\")) {
+				destination = new File(k+"\\"+a);
+			}
+			else {
+				for (int z=0;z<k.length();z++) {
+					if(z==0) {
+						v[z]=k.charAt(z);
+						j=j+'/'+v[z];
+					}
+					else {
+						v[z]=k.charAt(z);
+						j=j+v[z];
+					}
+				}
+				if(new File(j).isDirectory()) {
+					destination = new File(j+"\\"+a);
+				}
+				else {
+					System.out.println(d+"\\"+a);
+					destination = new File(d+"\\"+k);
+				}
+			}
 			for (int i=0;i<a.length();i++) {
 				if(i==0) {
 					b[i]=a.charAt(i);
@@ -147,115 +270,47 @@ public class Functionalities {
 					d=d+b[i];
 				}
 			}
-		
-			File c = new File(d);
-			File g = new File(o+"\\"+a);
-			System.out.println(g);
-			if(g.exists()){
-		    	System.out.println("File already exists in the destination folder");	
-		    }
-			else if(c.renameTo(g)) {
-		    	if(c.delete()) {}
-		    	System.out.format("%1$-20s\n","Se han movido 1 archivo(s)");
-		    }
-		    else{
-		    	System.out.println("The system couldn't find the specified file or route");
-		    }
+			
+			File source = new File(d);
+			if (!source.exists()) {
+				System.out.println("Couldn't find the specified file	");
+			}
+			else if(source.toString().equalsIgnoreCase(destination.toString())) {
+				System.out.println("Can't copy over itself");
+			}
+			else {
+				Files.copy(source.toPath(),destination.toPath(),StandardCopyOption.REPLACE_EXISTING);
+				System.out.format("%1$-20s\n","Se han copiado 1 archivo(s)");
+			}
 		}
-	}
-		
-	
-	protected void delete(String d,String a) {
-		char[] b = new char[a.length()];
-		if(d.equalsIgnoreCase("C:\\Windows")) {
-			System.out.println("Access denied");
+		else if(sn1.hasNext() && !sn2.hasNext()) {
+			System.out.println("Can't copy over itself");
 		}
 		else {
-			for (int i=0;i<a.length();i++) {
+			System.out.println("Wrong command syntax");
+		}
+		
+	}
+	
+	protected void mkdir(String d,String a) {
+		Scanner sn1 = new Scanner(a);
+		if(sn1.hasNext()) {
+			for(int i=0;i<a.length();i++) {
 				if(i==0) {
 					d=d+'/';
 				}
 				else {
-					b[i]=a.charAt(i);
-					d=d+b[i];
+					d=d+a.charAt(i);
 				}
 			}
-			File c = new File(d);
-			if(c.delete()) {
-				System.out.format("%1$-20s\n","Se han eliminado 1 archivo(s)");
+			File dir = new File(d);
+			boolean exists = dir.mkdir();
+			if (!exists) {
+				System.out.println("Directory already exists");
 			}
-			else {
-				if(c.isDirectory()) {
-					System.out.println(c.getName()+" is not empty");
-				}
-				else {
-					System.out.println("No se pudo encontrar  "+d+"\n");
-				}
-			}
-		}
-	}
-		
-	
-	protected void copy(String a,String d,String k) throws IOException {
-		char[] b;char[] v;
-		String j=d;
-		File destination;
-	    b = new char[a.length()];
-		v = new char[k.length()];
-		if (k.equalsIgnoreCase(" .")) {
-			destination = new File(d+"\\"+a);
 		}
 		else {
-			for (int z=0;z<k.length();z++) {
-				if(z==0) {
-					v[z]=k.charAt(z);
-					j=j+'/';
-				}
-				else {
-					v[z]=k.charAt(z);
-					j=j+v[z];
-				}
-			}
-			destination = new File(j+"\\"+a);
-		}
-		for (int i=0;i<a.length();i++) {
-			if(i==0) {
-				b[i]=a.charAt(i);
-				d=d+'/'+b[i];
-			}
-			else {
-				b[i]=a.charAt(i);
-				d=d+b[i];
-			}
-		}
-		
-		File source = new File(d);
-		if (!source.exists()) {
-			System.out.println("Couldn't find the specified file	");
-		}
-		else if(source.toString().equalsIgnoreCase(destination.toString())) {
-			System.out.println("Can't copy over itself");
-		}
-		else {
-			Files.copy(source.toPath(),destination.toPath(),StandardCopyOption.REPLACE_EXISTING);
-			System.out.format("%1$-20s\n","Se han copiado 1 archivo(s)");
-		}
-		
-	}
-	
-	protected void mkdir(String h,String a) {
-		for(int i=0;i<a.length();i++) {
-			if(i==0) {
-				h=h+'/';
-			}
-			else {
-				h=h+a.charAt(i);
-			}
-		}
-		File dir = new File(h);
-		boolean exists = dir.mkdir();
-		if (!exists) {
-			System.out.println("Directory already exists");
+			System.out.println("Wrong command syntax");
 		}
 	}
 	
@@ -294,22 +349,34 @@ public class Functionalities {
 	
 	protected void rmdir(String a,String d) {
 		char[] b = new char[a.length()];
-		if(d.equalsIgnoreCase("C:\\Windows")) {
+		Scanner sn1 = new Scanner(a);
+		File c;
+		if(a.toLowerCase().startsWith("c:\\windows")||d.toLowerCase().startsWith("c:\\windows")) {
 			System.out.println("Access denied");
 		}
-		else {
-			for (int i=0;i<a.length();i++) {
-				if(i==0) {
-					d=d+'/';
-				}
-				else {
+		else if(sn1.hasNext()) {
+			if(a.trim().startsWith("c:\\")||a.trim().startsWith("C:\\")) {
+				String z="";
+				for (int i=1;i<a.length();i++) {
 					b[i]=a.charAt(i);
-					d=d+b[i];
+					z=z+b[i];
 				}
+				c = new File(z);
 			}
-			File c = new File(d);
+			else {
+				for (int i=0;i<a.length();i++) {
+					if(i==0) {
+						d=d+'/';
+					}
+					else {
+						b[i]=a.charAt(i);
+						d=d+b[i];
+					}
+				}
+				c = new File(d);
+			}
 			if(!c.isDirectory()) {
-				System.out.println(a+" is not a directory");
+				System.out.println(c+" is not a directory");
 			}
 			else {
 				System.out.println("Are you sure? Y/N");
@@ -330,8 +397,10 @@ public class Functionalities {
 				}
 			}
 		}
+		else {
+			System.out.println("Wrong command syntax");
+		}
 	}
-	
 	private boolean remove(File files) {
 		if(files.isDirectory()){
 			File[] content = files.listFiles();
