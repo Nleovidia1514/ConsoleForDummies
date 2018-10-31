@@ -116,7 +116,7 @@ public class Functionalities {
 			}	
 		}
 		else {
-			System.out.println("Wrong command syntax");
+			System.out.println("Echo: Active");
 		}
 	}
 	
@@ -135,11 +135,11 @@ public class Functionalities {
 				else {
 					char[] b = new char[k.length()];
 					for (int i=0;i<k.length();i++) {
+						b[i]=k.charAt(i);
 						if(i==0) {
-							o=d+'/';
+							o=d+'/'+b[i];
 						}
 						else {
-							b[i]=k.charAt(i);
 							o=o+b[i];
 						}
 					}
@@ -225,66 +225,72 @@ public class Functionalities {
 	}
 		
 	
-	protected void copy(String a,String d,String k) throws IOException {
+	protected void copy(String c,String d) throws IOException {
 		char[] b,v;
 		String j=d;
 		File destination;
 		Scanner sn1,sn2;
-		sn1 = new Scanner(a);
-		sn2 = new Scanner(k);
-		if(sn1.hasNext() && sn2.hasNext()) {
-			b = new char[a.length()];
-			v = new char[k.length()];
-			if (k.trim().equalsIgnoreCase(".")) {
-				destination = new File(d+"\\"+a);
-			}
-			else if(k.trim().startsWith("C:\\")||k.trim().startsWith("c:\\")) {
-				destination = new File(k+"\\"+a);
-			}
-			else {
-				for (int z=0;z<k.length();z++) {
-					if(z==0) {
-						v[z]=k.charAt(z);
-						j=j+'/'+v[z];
+		sn1 = new Scanner(c);
+		if (sn1.hasNext()) {
+			String a=sn1.next().trim();
+			if(sn1.hasNext()) {
+				String k=sn1.next().trim();
+				b = new char[a.length()];
+				v = new char[k.length()];
+				if (k.trim().equalsIgnoreCase(".")) {
+					destination = new File(d+"\\"+a);
+				}
+				else if(k.trim().startsWith("C:\\")||k.trim().startsWith("c:\\")) {
+					destination = new File(k+"\\"+a);
+				}
+				else {
+					for (int z=0;z<k.length();z++) {
+						if(z==0) {
+							v[z]=k.charAt(z);
+							j=j+'/'+v[z];
+						}
+						else {
+							v[z]=k.charAt(z);
+							j=j+v[z];
+						}
+					}
+					if(new File(j).isDirectory()) {
+						destination = new File(j+"\\"+a);
 					}
 					else {
-						v[z]=k.charAt(z);
-						j=j+v[z];
+						System.out.println(d+"\\"+a);
+						destination = new File(d+"\\"+k);
 					}
 				}
-				if(new File(j).isDirectory()) {
-					destination = new File(j+"\\"+a);
+				for (int i=0;i<a.length();i++) {
+					if(i==0) {
+						b[i]=a.charAt(i);
+						d=d+'/'+b[i];
+					}
+					else {
+						b[i]=a.charAt(i);
+						d=d+b[i];
+					}
+				}
+				
+				File source = new File(d);
+				if (!source.exists()) {
+					System.out.println("Couldn't find the specified file	");
+				}
+				else if(source.toString().equalsIgnoreCase(destination.toString())) {
+					System.out.println("Can't copy over itself");
 				}
 				else {
-					System.out.println(d+"\\"+a);
-					destination = new File(d+"\\"+k);
+					Files.copy(source.toPath(),destination.toPath(),StandardCopyOption.REPLACE_EXISTING);
+					System.out.format("%1$-20s\n","Se han copiado 1 archivo(s)");
 				}
 			}
-			for (int i=0;i<a.length();i++) {
-				if(i==0) {
-					b[i]=a.charAt(i);
-					d=d+'/'+b[i];
-				}
-				else {
-					b[i]=a.charAt(i);
-					d=d+b[i];
-				}
+			else if(!sn1.hasNext()) {
+				if(new File(a).exists()) 
+					System.out.println("Can't copy over itself");
+				else
+					System.out.println("Couldn't find the specified file");
 			}
-			
-			File source = new File(d);
-			if (!source.exists()) {
-				System.out.println("Couldn't find the specified file	");
-			}
-			else if(source.toString().equalsIgnoreCase(destination.toString())) {
-				System.out.println("Can't copy over itself");
-			}
-			else {
-				Files.copy(source.toPath(),destination.toPath(),StandardCopyOption.REPLACE_EXISTING);
-				System.out.format("%1$-20s\n","Se han copiado 1 archivo(s)");
-			}
-		}
-		else if(sn1.hasNext() && !sn2.hasNext()) {
-			System.out.println("Can't copy over itself");
 		}
 		else {
 			System.out.println("Wrong command syntax");
@@ -328,8 +334,8 @@ public class Functionalities {
 		System.out.println("Y/N");
 		String exit = sn.next();
 		if(exit.equalsIgnoreCase("Y")){
-			JFrame f = new JFrame("Gracias por el 20");
-			JTextField tf = new JTextField("Gracias por el 20 profesor");
+			JFrame f = new JFrame(">:(");
+			JTextField tf = new JTextField("            ONTA MI 20");
 			f.setSize(340, 300);
 			tf.setBounds(0,0,300,300);
 			tf.setBackground(Color.BLACK);

@@ -41,7 +41,7 @@ public class Windows extends Functionalities {
 			}
 		}
 		else {
-			System.out.println(path);
+			System.out.println(path.getAbsolutePath());
 		}
 		return camino;
 	}
@@ -57,7 +57,7 @@ public class Windows extends Functionalities {
 		while(keepRunning) {
 			File path;
 			path = new File(camino);
-			System.out.print("\n"+path+'>');
+			System.out.print("\n"+path.toString().toUpperCase()+'>');
 			command=sn.next();
 			if(command.equalsIgnoreCase("echo")) {
 				echoPrint(sn.nextLine(),camino);
@@ -86,7 +86,7 @@ public class Windows extends Functionalities {
 			
 			
 			else if(command.equalsIgnoreCase("copy")) {
-				copy(sn.next(), camino,sn.next().trim());
+				copy(sn.nextLine(), camino);
 			}
 			
 			else if (command.equalsIgnoreCase("help")) {
@@ -98,9 +98,12 @@ public class Windows extends Functionalities {
 			}
 			
 			else if (command.equalsIgnoreCase("exit")) {
+				Main perro= new Main();
+				perro.main(null);
+			}
+			else if(command.equalsIgnoreCase("q")) {
 				keepRunning=exit();
 			}
-			
 			else if (command.equalsIgnoreCase("Date")) {
 				System.out.println("The current date is:   "+sdf.format(System.currentTimeMillis()));
 			}
@@ -120,7 +123,7 @@ public class Windows extends Functionalities {
 			
 			else {
 				System.out.println("'"+command+"' No se reconoce como comando interno o externo");
-		
+				String o=sn.nextLine();
 			}
 		}
 	}

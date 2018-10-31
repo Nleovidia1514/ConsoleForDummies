@@ -32,8 +32,9 @@ public class Unix extends Functionalities{
 				
 				u=u+b[i];
 			}
-			System.out.print("\n"+u+'>');
 			File path = new File(camino);
+			u=u.toUpperCase().replaceAll("C:/users".toUpperCase(), "~");
+			System.out.print("\n"+u+" $");
 			command=sn.next();
 			if (command.equalsIgnoreCase("ls")) {
 				showDir(path);
@@ -47,7 +48,7 @@ public class Unix extends Functionalities{
 				echoPrint(sn.nextLine(),camino);	
 			}
 			else if (command.equalsIgnoreCase("cp")) {
-				copy(sn.next(),camino,sn.next().trim());
+				copy(sn.nextLine(),camino);
 			}
 			else if (command.equalsIgnoreCase("rm")){
 				delete(camino,sn.nextLine());
@@ -70,10 +71,12 @@ public class Unix extends Functionalities{
 				System.out.println("The current date is:   "+sdf.format(System.currentTimeMillis()));
 			}
 			
-			else if(command.equalsIgnoreCase("exit")) {
-				exit();
-				System.in.read();
-				System.exit(1);
+			else if(command.equalsIgnoreCase("q")) {
+				keepRunning=exit();
+			}
+			else if (command.equalsIgnoreCase("exit")) {
+				Main perro= new Main();
+				perro.main(null);
 			}
 			
 			else if(command.equalsIgnoreCase("zelda")) {
@@ -92,6 +95,7 @@ public class Unix extends Functionalities{
 			}
 			else {
 				System.out.println("'"+command+"' No se reconoce como comando interno o externo");
+				String o = sn.nextLine();
 			}
 		}
 		
